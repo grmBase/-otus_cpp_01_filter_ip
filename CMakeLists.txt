@@ -5,24 +5,28 @@ set(PROJECT_VESRION 0.0.${PATCH_VERSION})
 
 
 # имя проекта
-project(ip_filter VERSION ${PROJECT_VESRION})
+project(ip_filter_prj VERSION ${PROJECT_VESRION})
 
 
 # пусть будет - потом добавлю автотесты
-#find_package(Boost COMPONENTS unit_test_framework REQUIRED)
+find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 #нет у нас такого пока - вроде не требуется
 #configure_file(version.h.in version.h)
 
 
-# имя основной утилиты будет таким же как и имя проекта?
-add_executable(ip_filter main.cpp)
+# основной исполнимый файл
+add_executable(ip_filter 
+main.cpp
+#work_obj.cpp
+)
 
-# пока не буду делать библиотеку, но по идее потом может и надо буует
-#add_library(helloworld lib.cpp)
-#add_executable(test_version test_version.cpp)
+add_library(work_lib work_obj.cpp)
 
-set_target_properties(ip_filter PROPERTIES
+add_executable(unit_tests unit_tests.cpp)
+
+
+set_target_properties(ip_filter work_lib unit_tests PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
 )
@@ -30,43 +34,45 @@ target_include_directories(ip_filter
     PRIVATE "${CMAKE_BINARY_DIR}"
 )
 
-#  Пока не надо - тестов не добавляю
-#set_target_properties(test_version PROPERTIES
-#    COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
-#    INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR}
-#)
 
+set_target_properties(unit_tests PROPERTIES
+    COMPILE_DEFINITIONS BOOST_TEST_DYN_LINK
+    INCLUDE_DIRECTORIES ${Boost_INCLUDE_DIR}
+)
 
-# Пока всё без доп библиотек
-#target_link_libraries(helloworld_cli PRIVATE
-#    helloworld
-#)
-#target_link_libraries(test_version
-#    ${Boost_LIBRARIES}
-#    helloworld
-#)
+target_link_libraries(ip_filter PRIVATE
+    work_lib
+)
+
+target_link_libraries(unit_tests
+    ${Boost_LIBRARIES}
+    work_lib
+)
 
 
 if (MSVC)
-    target_compile_options(ip-filter PRIVATE
+    target_compile_options(ip_filter PRIVATE
         /W4
     )
-    #target_compile_options(helloworld PRIVATE
-    #    /W4
-    #)
-    #target_compile_options(test_version PRIVATE
-    #    /W4
-    #)
+    target_compile_options(work_lib PRIVATE
+        /W4
+    )
+    target_compile_options(unit_tests PRIVATE
+        /W4
+    )
+
+
+
 else ()
     target_compile_options(ip_filter PRIVATE
         -Wall -Wextra -pedantic -Werror
     )
-    #target_compile_options(helloworld PRIVATE
-    #    -Wall -Wextra -pedantic -Werror
-    #)
-    #target_compile_options(test_version PRIVATE
-    #    -Wall -Wextra -pedantic -Werror
-    #)
+    target_compile_options(work_lib PRIVATE
+        -Wall -Wextra -pedantic -Werror
+    )
+    target_compile_options(unit_tests PRIVATE
+        -Wall -Wextra -pedantic -Werror
+    )
 endif()
 
 
@@ -83,6 +89,6 @@ set(CPACK_PACKAGE_CONTACT example@example.com)
 
 include(CPack)
 
-# Тестов пока нет
-#enable_testing()
-#add_test(test_version test_version)
+
+enable_testing()
+add_test(unit_tests unit_tests)
