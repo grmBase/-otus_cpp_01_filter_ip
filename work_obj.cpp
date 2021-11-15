@@ -116,7 +116,7 @@ int t_work_obj::mainFunc()
   std::for_each(ip_pool.cbegin(), ip_pool.cend(), print_if_first_any_46());
 
   return 0;
-};
+}
 
 
 
