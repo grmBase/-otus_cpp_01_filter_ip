@@ -16,7 +16,7 @@ int split(const std::string& str, t_ip_addr& aResult)
   //size_t scanned = std::sscanf(str.c_str(), "%uhhd.%uhhd.%uhhd.%uhhd\t%d\t%d",
 
   // tmp array due to unable to find format for uint8_t
-  uint16_t tmp[c_nAddrSize] = {};
+  short int tmp[c_nAddrSize] = {};
   size_t scanned = std::sscanf(str.c_str(), "%hd.%hd.%hd.%hd\t%d\t%d",
     &tmp[0], &tmp[1], &tmp[2], &tmp[3],
     &nDummy1, &nDummy2);
