@@ -12,16 +12,21 @@ int split(const std::string& str, t_ip_addr& aResult)
 
   int nDummy1 = 0;
   int nDummy2 = 0;
-  size_t scanned = std::sscanf(str.c_str(), "%hhd.%hhd.%hhd.%hhd\t%d\t%d",
-    &aResult.m_bAddress[0],
-    &aResult.m_bAddress[1],
-    &aResult.m_bAddress[2],
-    &aResult.m_bAddress[3],
-    &nDummy1,
-    &nDummy2);
+
+  //size_t scanned = std::sscanf(str.c_str(), "%uhhd.%uhhd.%uhhd.%uhhd\t%d\t%d",
+
+  // tmp array due to unable to find format for uint8_t
+  uint16_t tmp[c_nAddrSize] = {};
+  size_t scanned = std::sscanf(str.c_str(), "%hd.%hd.%hd.%hd\t%d\t%d",
+    &tmp[0], &tmp[1], &tmp[2], &tmp[3],
+    &nDummy1, &nDummy2);
   if (scanned != (c_nAddrSize + 2)) {
     std::cout << "error in scanf()" << std::endl;
     return -33;
+  }
+
+  for (size_t i = 0; i < c_nAddrSize; ++i) {
+    aResult.m_bAddress[i] = tmp[i];
   }
 
   return 0;
@@ -30,6 +35,13 @@ int split(const std::string& str, t_ip_addr& aResult)
 
 int t_work_obj::mainFunc()
 {
+  /* micro debug
+  {
+    const std::string strTmp = "222.42.146.225\t2\t0";
+    t_ip_addr ip_addr{};
+    int nResult = split(strTmp, ip_addr);
+  }*/
+
   std::vector<t_ip_addr> ip_pool;
 
   {
