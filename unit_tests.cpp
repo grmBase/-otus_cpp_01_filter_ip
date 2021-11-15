@@ -35,7 +35,7 @@ int sort_test()
   };
 
   return !(vecExpected == vecUnsorted);
-};
+}
 
 
 BOOST_AUTO_TEST_CASE(test_valid_version)
