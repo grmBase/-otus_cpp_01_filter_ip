@@ -1,14 +1,15 @@
+//---------------------------------------------------------------------------
 #include <iostream>
 #include <string>
-
+//---------------------------------------------------------------------------
 #include "work_obj.h"
-
+//---------------------------------------------------------------------------
 
 
 int main(int, char const* [])
 {
 
-  t_work_obj work_obj;
+  ip_filter::t_work_obj work_obj;
 
   try
   {
@@ -17,11 +18,11 @@ int main(int, char const* [])
       std::cout << "error in mainFunc()" << std::endl;
     }
   }
-  catch (const std::exception& e)
+  catch(const std::exception& e)
   {
     std::cerr << "some exception here. msg: " << e.what() << std::endl;
   }
 
   return 0;
 }
-
+//---------------------------------------------------------------------------
